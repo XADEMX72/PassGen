@@ -2,7 +2,9 @@ import string
 import random
 import tkinter as tk
 from tkinter import messagebox
+import hashlib
 
+FONT = ('Arial', 16)
 
 def generate_password():
     password = ''
@@ -13,7 +15,6 @@ def generate_password():
     password_var.set(password)
     check_password_strength(password)
 
-
 def check_password_strength(password):
     strength = ''
     if any(char.isdigit() for char in password) and any(char.isupper() for char in password) and len(password) >= 12:
@@ -22,7 +23,6 @@ def check_password_strength(password):
         strength = 'moderate'
     if strength:
         messagebox.showinfo('Password Strength', f'The generated password is {strength}.')
-
 
 def save_password():
     website = website_entry.get()
@@ -38,7 +38,6 @@ def save_password():
     else:
         messagebox.showerror('Error', 'Please fill in all fields.')
 
-
 def show_passwords():
     with open('passwords.txt', 'r') as file:
         passwords = file.readlines()
@@ -51,18 +50,62 @@ def show_passwords():
             copy_button = tk.Button(window, text='Copy', command=lambda p=password: copy_password(p))
             copy_button.grid(row=i, column=1)
 
-
 def copy_password(password):
     root.clipboard_clear()
     root.clipboard_append(password.split(' | ')[2])
     messagebox.showinfo('Success', 'Password copied to clipboard!')
 
+def check_master_password():
+    entered_password = master_password_entry.get()
+    hashed_password = hashlib.sha256(entered_password.encode()).hexdigest()
+    with open('master_password.txt', 'r') as file:
+        saved_password = file.read()
+    if hashed_password == saved_password:
+        master_password_window.destroy()
+    else:
+        messagebox.showerror('Error', 'Wrong password. Please try again.')
 
+def create_master_password():
+    new_password = master_password_entry.get()
+    hashed_password = hashlib.sha256(new_password.encode()).hexdigest()
+    with open('master_password.txt', 'w') as file:
+        file.write(hashed_password)
+    master_password_window.destroy()
+
+# Check if the master password file exists
+try:
+    with open('master_password.txt', 'r') as file:
+        master_password_exists = True
+except FileNotFoundError:
+    master_password_exists = False
+
+if master_password_exists:
+    # Prompt for Master Password
+    master_password_window = tk.Tk()
+    master_password_window.title('Master Password')
+    master_password_label = tk.Label(master_password_window, text='Enter Master Password:', font=FONT)
+    master_password_label.pack()
+    master_password_entry = tk.Entry(master_password_window, show='*', font=FONT)
+    master_password_entry.pack()
+    master_password_button = tk.Button(master_password_window, text='Enter', command=check_master_password, font=FONT)
+    master_password_button.pack()
+    master_password_window.mainloop()
+else:
+    # Prompt to Create Master Password
+    master_password_window = tk.Tk()
+    master_password_window.title('Create Master Password')
+    master_password_label = tk.Label(master_password_window, text='Create Master Password:', font=FONT)
+    master_password_label.pack()
+    master_password_entry = tk.Entry(master_password_window, show='*', font=FONT)
+    master_password_entry.pack()
+    master_password_button = tk.Button(master_password_window, text='Create', command=create_master_password, font=FONT)
+    master_password_button.pack()
+    master_password_window.mainloop()
+
+# If the master password is correct or created, proceed to the main window
 root = tk.Tk()
 root.title('Password Manager')
 root.geometry('1400x900')
-
-FONT = ('Arial', 16)
 
 tk.Label(root, text='Website:', font=FONT).grid(row=0, column=0)
 website_entry = tk.Entry(root, font=FONT)
