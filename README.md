@@ -16,7 +16,7 @@ Enhance your password security with PassGen. It's simple, reliable, and user-fri
 
 # Online Website
 
-To use PassGen, simply visit the website at https://passgenweb.xademx1.repl.co and follow the prompts to generate a password.
+To use PassGenWeb, simply visit the website at https://passgenweb.xademx1.repl.co and follow the prompts to generate a password.
 
 ## Forking and Modification
 
