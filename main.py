@@ -62,6 +62,7 @@ def check_master_password():
         saved_password = file.read()
     if hashed_password == saved_password:
         master_password_window.destroy()
+        create_main_window()
     else:
         messagebox.showerror('Error', 'Wrong password. Please try again.')
 
@@ -71,6 +72,36 @@ def create_master_password():
     with open('master_password.txt', 'w') as file:
         file.write(hashed_password)
     master_password_window.destroy()
+    create_main_window()
+
+def create_main_window():
+    global root, website_entry, username_entry, password_length_var, password_var
+    root = tk.Tk()
+    root.title('Password Manager')
+    root.geometry('600x400')
+
+    tk.Label(root, text='Website:', font=FONT).grid(row=0, column=0)
+    website_entry = tk.Entry(root, font=FONT)
+    website_entry.grid(row=0, column=1)
+
+    tk.Label(root, text='Username:', font=FONT).grid(row=1, column=0)
+    username_entry = tk.Entry(root, font=FONT)
+    username_entry.grid(row=1, column=1)
+
+    tk.Label(root, text='Password length:', font=FONT).grid(row=2, column=0)
+    password_length_var = tk.IntVar()
+    password_length_var.set(8)
+    password_length_entry = tk.Entry(root, textvariable=password_length_var, font=FONT)
+    password_length_entry.grid(row=2, column=1)
+
+    tk.Button(root, text='Generate Password', font=FONT, command=generate_password).grid(row=3, column=0)
+    password_var = tk.StringVar()
+    tk.Entry(root, textvariable=password_var, state='readonly', font=FONT).grid(row=3, column=1)
+
+    tk.Button(root, text='Save Password', font=FONT, command=save_password).grid(row=4, column=0)
+    tk.Button(root, text='Show Saved Passwords', font=FONT, command=show_passwords).grid(row=4, column=1)
+
+    root.mainloop()
 
 # Check if the master password file exists
 try:
@@ -101,31 +132,3 @@ else:
     master_password_button = tk.Button(master_password_window, text='Create', command=create_master_password, font=FONT)
     master_password_button.pack()
     master_password_window.mainloop()
-
-# If the master password is correct or created, proceed to the main window
-root = tk.Tk()
-root.title('Password Manager')
-root.geometry('1400x900')
-
-tk.Label(root, text='Website:', font=FONT).grid(row=0, column=0)
-website_entry = tk.Entry(root, font=FONT)
-website_entry.grid(row=0, column=1)
-
-tk.Label(root, text='Username:', font=FONT).grid(row=1, column=0)
-username_entry = tk.Entry(root, font=FONT)
-username_entry.grid(row=1, column=1)
-
-tk.Label(root, text='Password length:', font=FONT).grid(row=2, column=0)
-password_length_var = tk.IntVar()
-password_length_var.set(8)
-password_length_entry = tk.Entry(root, textvariable=password_length_var, font=FONT)
-password_length_entry.grid(row=2, column=1)
-
-tk.Button(root, text='Generate Password', font=FONT, command=generate_password).grid(row=3, column=0)
-password_var = tk.StringVar()
-tk.Entry(root, textvariable=password_var, state='readonly', font=FONT).grid(row=3, column=1)
-
-tk.Button(root, text='Save Password', font=FONT, command=save_password).grid(row=4, column=0)
-tk.Button(root, text='Show Saved Passwords', font=FONT, command=show_passwords).grid(row=4, column=1)
-
-root.mainloop()
